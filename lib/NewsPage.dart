@@ -4,7 +4,8 @@ import 'package:dio/dio.dart';
 import 'dart:core';
 
 import 'package:my_flutter_demo/NewsData.dart';
-import 'dart:convert';
+
+import 'package:my_flutter_demo/NewsDetail.dart';
 
 class NewsPage extends StatefulWidget{
   //构造函数
@@ -109,26 +110,38 @@ class _NewsPageState extends State<NewsPage>{
       backgroundColor: Colors.blue,
       duration: Duration(seconds: 2),
       action: SnackBarAction(label: '好的', textColor:Colors.red,onPressed: (){
-          _showDialog("SnackBar的action");
+          _showDialog("点击SnackBar的action");
       }),
     ));
   }
-  //显示对话框
-  void _showDialog(String content){
+  //显示对话框,newsId可要可不要，某些地方需要，某些地方不需要
+  void _showDialog(@required String content,{String newsId}){
       showDialog(
           context: context,
           builder: (BuildContext context){
               return AlertDialog(
                     title: Text('提示'),
-                    content: Text('点击了"$content"'),
+                    content: Text('消息："$content"'),
                     actions: <Widget>[
                         FlatButton(onPressed: (){
                             Navigator.of(context).pop();//消失对话框显示
                             _showSnackBar(content);
                         }, child: Text('取消')),
                         RaisedButton(onPressed: (){
-
-
+                            Navigator.of(context).pop();//消失对话框显示
+                            //TODO 使用构建路由而不是命名路由跳转到详情页面,页面返回时会返回一个string参数
+//                            Navigator.pushNamed<String>(context, '/newsDetail')
+//                                //TODO 在then里面接收页面返回的参数，pushNamed返回的是Future对象
+//                                .then((pageRetParam){
+//                                  //TODO pageRetParam返回的参数类型是由pushNamed<T>的泛型T决定
+//                                  _showDialog(pageRetParam);
+//                            });
+                            //构建路由
+                              Navigator.push<String>(context, MaterialPageRoute(builder: (BuildContext context){
+                                  return new NewsDetail(title: '详情',newsId: newsId,);
+                              })).then((ret){
+                                  _showDialog(ret);
+                              });
                         },child: Text('确定'),textColor: Colors.white,),
 
                     ],
@@ -190,7 +203,7 @@ class _NewsPageState extends State<NewsPage>{
             setState(() {
               itemCurrentClickIndex = -1;
             });
-            _showDialog(dataList[index].title);
+            _showDialog(dataList[index].title,newsId: dataList[index].id);
        },
         onTapDown: (details){
           print('onTapDown');
@@ -225,8 +238,8 @@ class _NewsPageState extends State<NewsPage>{
 //                //value是前面的任务设置的值
 //                 .then((value)=> print('RefreshIndicator: '+widget.allUrl))
 //                 .timeout(Duration(seconds: 3));
-           //延时1秒在获取数据
-            return Future.delayed(Duration(seconds: 1),()=> _getData());
+           //延时0秒在获取数据
+            return Future.delayed(Duration(seconds: 0),()=> _getData());
        }),
     );
   }

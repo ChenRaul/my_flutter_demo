@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:my_flutter_demo/NewsPage.dart';
 
 class MainPage extends StatefulWidget{
-  //从实例化的地方接收参数mainPageTitle
+  //从父组件实例化的地方接收参数mainPageTitle
   MainPage({Key key, this.mainPageTitle}) : super(key: key);
   final String mainPageTitle;
 
