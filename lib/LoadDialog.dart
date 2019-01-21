@@ -1,11 +1,13 @@
 
 import 'package:flutter/material.dart';
 
-class LoadDialog extends Dialog{
-  LoadDialog({Key key}):super(key:key);
+class LoadDialog extends SimpleDialog{
+  final loadText;
+
+  LoadDialog({Key key,this.loadText}):super(key:key);
+
   @override
   Widget build(BuildContext context) {
-
       return Material(
           type:MaterialType.transparency,
           child: Center(
@@ -16,7 +18,7 @@ class LoadDialog extends Dialog{
                   //一般这样来增加shape，也就是所谓的边框 圆角等,此属性不能与前面的color一起使用
                   decoration: BoxDecoration(
                       color:Colors.white ,
-                      border: Border.all(width: 1.0),
+                      border: Border.all(width: 1.0,color: Colors.white),
                       borderRadius: BorderRadius.circular(5),
                   ),
                   child:
@@ -25,10 +27,12 @@ class LoadDialog extends Dialog{
                           crossAxisAlignment: CrossAxisAlignment.center,
                           children: <Widget>[
                               Padding(padding: EdgeInsets.all(10),
-                                child:  Image.asset('img/load.png',width: 30,height: 30,),
+                                child:  CircularProgressIndicator(
+                                    strokeWidth: 3,
+                                )
                               ),
                               Padding(padding: EdgeInsets.all(5),
-                                  child:  Text('加载中'),
+                                  child:  Text(loadText),
                               )
                           ],
                       ),

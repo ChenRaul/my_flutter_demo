@@ -10,7 +10,7 @@ class PublishPage extends StatefulWidget{
   }
 
 }
-class _PublishPageState extends State<PublishPage>{
+class _PublishPageState extends State<PublishPage> with AutomaticKeepAliveClientMixin{
   @override
   Widget build(BuildContext context) {
     // TODO: implement build
@@ -18,5 +18,9 @@ class _PublishPageState extends State<PublishPage>{
         body: new Center(child:new Text(widget.publishPageTitle)),
     );
   }
+
+  @override
+  // TODO: implement wantKeepAlive
+  bool get wantKeepAlive => true;
 
 }

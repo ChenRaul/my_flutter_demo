@@ -10,7 +10,7 @@ class MessagePage extends StatefulWidget{
   }
 
 }
-class _MessagePageState extends State<MessagePage>{
+class _MessagePageState extends State<MessagePage> with AutomaticKeepAliveClientMixin{
   @override
   Widget build(BuildContext context) {
     // TODO: implement build
@@ -19,5 +19,9 @@ class _MessagePageState extends State<MessagePage>{
         body: new Center(child:new Text(widget.messagePageTitle)),
       );
   }
+
+  @override
+  // TODO: implement wantKeepAlive
+  bool get wantKeepAlive => true;
 
 }

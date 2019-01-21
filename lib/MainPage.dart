@@ -14,7 +14,7 @@ class MainPage extends StatefulWidget{
     return _MainPageState();
   }
 }
-class _MainPageState extends State<MainPage>{
+class _MainPageState extends State<MainPage> with AutomaticKeepAliveClientMixin{
   final List<String> tabTitleList = ['全部','精华','分享','问答','招聘'];
   @override
   void initState() {
@@ -72,5 +72,9 @@ class _MainPageState extends State<MainPage>{
       ),
       ),);
   }
+
+  @override
+  // TODO: implement wantKeepAlive
+  bool get wantKeepAlive => true;
 
 }

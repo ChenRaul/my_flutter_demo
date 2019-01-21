@@ -21,6 +21,7 @@ class MyApp extends StatelessWidget {
         //这种方式是命名路由，不能动态传递参数，只能传递一些固定的参数，
         // 如需要传递动态参数，则需要使用构建路由，所以在NewsPage页面里面使用构建路由跳转到NewsDetail页面，因为需要传递每一条新闻的id
           '/newsDetail':(BuildContext context)=> NewsDetail(title:'详情'),
+
       },
       theme: ThemeData(
         //这种方式只能固定选择MaterialColor系统中定义的几种颜色来设置主题颜色，所以使用下面的方式来自定主题颜色
@@ -49,6 +50,7 @@ class _MyHomePageState extends State<Main> {
   int _currentIndex = 0;
   final List<String> titles=['首页','发表','消息','我的'];
   List<StatefulWidget> _pages= List<StatefulWidget>();
+  PageController _pageController = PageController(initialPage: 0);
 
   Image _getTabImageIcon(imagePath){
       return Image.asset(imagePath,width: 30,height: 30,);
@@ -72,7 +74,6 @@ class _MyHomePageState extends State<Main> {
     });
     print('MyHomePage initstate');
   }
-
   @override
   Widget build(BuildContext context) {
     // This method is rerun every time setState is called, for instance as done
@@ -86,7 +87,14 @@ class _MyHomePageState extends State<Main> {
           title: Text(titles[_currentIndex]),
           centerTitle:true,
       ),
-      body: _pages[_currentIndex],
+      body: PageView.builder(
+          controller:_pageController,
+          onPageChanged: (index){
+
+          },
+          itemBuilder: (BuildContext context, int index){
+              return _pages[index];
+      }),
 //      floatingActionButton: FloatingActionButton(
 //        tooltip: 'Increment',
 //        child: Icon(Icons.add),
@@ -103,12 +111,14 @@ class _MyHomePageState extends State<Main> {
          //设置当前的索引,
          currentIndex: _currentIndex,
           onTap: (index){
-             setState(() {
-               _currentIndex=index;
-             });
+            setState(() {
+              _currentIndex=index;
+            });
+             _pageController.jumpToPage(index);
           },
        ),
 
     );
   }
+
 }

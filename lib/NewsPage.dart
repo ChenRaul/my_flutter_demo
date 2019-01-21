@@ -1,6 +1,7 @@
 
 import 'package:flutter/material.dart';
 import 'package:dio/dio.dart';
+import 'package:my_flutter_demo/DateTimeFormat.dart';
 import 'dart:core';
 
 import 'package:my_flutter_demo/NewsData.dart';
@@ -19,7 +20,13 @@ class NewsPage extends StatefulWidget{
   }
 }
 
-class _NewsPageState extends State<NewsPage>{
+
+///AutomaticKeepAliveClientMixin 能够保持页面不重新运行initState，保持原来的状态
+class _NewsPageState extends State<NewsPage> with AutomaticKeepAliveClientMixin{
+  ///定义一个RefreshIndicatorState的全局key，以便来获取它的实例来调用一些方法，比如说通过RefreshIndicatorState来主动显示下拉刷新的UI效果
+  ///由于GlobalKey的泛型T类型只能是继承State的类，所以不能使用GlobalKey<RefreshIndicator>而是GlobalKey<RefreshIndicatorState>
+  final GlobalKey<RefreshIndicatorState> _refreshIndicatorKey = new GlobalKey<RefreshIndicatorState>();
+
   List<NewsList> dataList = new List();
   Color itemBackground = Colors.white;
   int itemCurrentClickIndex = -1;
@@ -28,7 +35,10 @@ class _NewsPageState extends State<NewsPage>{
     // TODO: 这个函数在生命周期中只调用一次。
 
     super.initState();
-    print('NewsPage initState'+widget.index.toString()+':'+widget.allUrl);
+    WidgetsBinding.instance.addPostFrameCallback((callback){
+        //主动调用下拉刷新 onRefresh以便获取数据
+        _refreshIndicatorKey.currentState.show(atTop: true);
+    });
   }
   @override
   void didChangeDependencies() {
@@ -96,13 +106,7 @@ class _NewsPageState extends State<NewsPage>{
           print('请求发生错误');
       }
   }
-  //格式化日期。// yyyy-MM-dd HH:mm:ss
-  String _getFormatDate(String date){
-      DateTime d = DateTime.parse(date);
-     //日期格式化
-      return '${d.year}-${d.month.toString().padLeft(2,'0')}-${d.day.toString().padLeft(2,'0')} ${d.hour.toString().padLeft(2,'0')}:${d.minute.toString().padLeft(2,'0')}:${d.second.toString().padLeft(2,'0')}';
 
-  }
   //显示SnackBar
   void _showSnackBar(String content){
     Scaffold.of(context).showSnackBar(SnackBar(
@@ -140,6 +144,7 @@ class _NewsPageState extends State<NewsPage>{
                               Navigator.push<String>(context, MaterialPageRoute(builder: (BuildContext context){
                                   return new NewsDetail(title: '详情',newsId: newsId,);
                               })).then((ret){
+                                  //返回时的回调
                                   _showDialog(ret);
                               });
                         },child: Text('确定'),textColor: Colors.white,),
@@ -160,7 +165,7 @@ class _NewsPageState extends State<NewsPage>{
                 children: <Widget>[
                   Container(
                     margin: EdgeInsets.only(right: 5),
-                    child: Image.network(dataList[index].author.avatar_url.startsWith("http") ? dataList[index].author.avatar_url : 'http:${dataList[index].author.avatar_url}',
+                    child: Image.network(dataList[index].author.avatarUrl.startsWith("http") ? dataList[index].author.avatarUrl : 'http:${dataList[index].author.avatarUrl}',
                         width: 90,height: 90
                     ),
                   ),
@@ -185,8 +190,8 @@ class _NewsPageState extends State<NewsPage>{
                                 Row(
                                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                     children: <Widget>[
-                                        Text(_getFormatDate(dataList[index].create_at),style: TextStyle(fontSize: 11),),
-                                        Text(_getFormatDate(dataList[index].last_reply_at),style: TextStyle(fontSize: 11),),
+                                        Text(DateTimeFormat.getFormatDate(dataList[index].create_at),style: TextStyle(fontSize: 11),),
+                                        Text(DateTimeFormat.getFormatDate(dataList[index].last_reply_at),style: TextStyle(fontSize: 11),),
                                     ],
                                 ),
                             ],
@@ -226,6 +231,7 @@ class _NewsPageState extends State<NewsPage>{
        margin: EdgeInsets.all(0),
        //ListView顶部有空白时，需要设置paddingTop为0
        child: RefreshIndicator(
+            key: _refreshIndicatorKey,//全局变量，可以在其他地方引用改组件实例
            child:  ListView.builder(
                itemCount: dataList.length,
                padding: EdgeInsets.only(top: 0),
@@ -243,6 +249,10 @@ class _NewsPageState extends State<NewsPage>{
        }),
     );
   }
+
+  @override
+  // TODO: implement wantKeepAlive
+  bool get wantKeepAlive => true;
 
 }
 

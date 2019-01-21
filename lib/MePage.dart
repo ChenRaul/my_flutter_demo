@@ -10,7 +10,7 @@ class MePage extends StatefulWidget{
   }
 
 }
-class _MePageState extends State<MePage>{
+class _MePageState extends State<MePage> with AutomaticKeepAliveClientMixin{
   @override
   Widget build(BuildContext context) {
     // TODO: implement build
@@ -18,5 +18,9 @@ class _MePageState extends State<MePage>{
         body: new Center(child:new Text(widget.mePageTitle)),
     );
   }
+
+  @override
+  // TODO: implement wantKeepAlive
+  bool get wantKeepAlive => true;
 
 }

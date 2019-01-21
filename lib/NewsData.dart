@@ -65,19 +65,19 @@ class NewsList {
 
 class AuthorInfo {
 
-  String avatar_url;
+  String avatarUrl;
   String loginname;
 
-  AuthorInfo.fromParams({this.avatar_url, this.loginname});
+  AuthorInfo.fromParams({this.avatarUrl, this.loginname});
 
   AuthorInfo.fromJson(jsonRes) {
-    avatar_url = jsonRes['avatar_url'];
+    avatarUrl = jsonRes['avatar_url'];
     loginname = jsonRes['loginname'];
   }
 
   @override
   String toString() {
-    return '{"avatar_url": ${avatar_url != null?'${json.encode(avatar_url)}':'null'},"loginname": ${loginname != null?'${json.encode(loginname)}':'null'}}';
+    return '{"avatar_url": ${avatarUrl != null?'${json.encode(avatarUrl)}':'null'},"loginname": ${loginname != null?'${json.encode(loginname)}':'null'}}';
   }
 }
 
