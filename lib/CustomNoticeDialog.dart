@@ -4,7 +4,7 @@ import 'package:my_flutter_demo/AppColors.dart';
 class CustomNoticeDialog extends Dialog{
   final String noticeText,noticeTitle,posBtnText,negBtnText;
   final bool clickOutCancel,isShowOneBtn;
-  final dynamic posPress,negPress;
+  final Function posPress,negPress;
 
   CustomNoticeDialog({
     Key key,
@@ -29,7 +29,7 @@ class CustomNoticeDialog extends Dialog{
               ),
           );
   }
-  //按钮
+  ///按钮
   Widget _getBtn(BuildContext context){
     if(isShowOneBtn){//显示一个按钮
       return GestureDetector(

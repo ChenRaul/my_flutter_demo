@@ -2,7 +2,9 @@
 import 'package:flutter/material.dart';
 import 'package:dio/dio.dart';
 import 'package:my_flutter_demo/AppColors.dart';
+import 'package:my_flutter_demo/CustomNoticeDialog.dart';
 import 'package:my_flutter_demo/DateTimeFormat.dart';
+import 'package:my_flutter_demo/DioUtil.dart';
 import 'dart:core';
 
 import 'package:my_flutter_demo/NewsData.dart';
@@ -11,8 +13,8 @@ import 'package:my_flutter_demo/NewsDetail.dart';
 
 class NewsPage extends StatefulWidget{
   //构造函数
-  NewsPage({Key key, this.allUrl,this.index}) : super(key: key);
-  final String allUrl;
+  NewsPage({Key key, this.url,this.index}) : super(key: key);
+  final String url;
   final int index;
   @override
   _NewsPageState createState() {
@@ -27,19 +29,61 @@ class _NewsPageState extends State<NewsPage> with AutomaticKeepAliveClientMixin{
   ///定义一个RefreshIndicatorState的全局key，以便来获取它的实例来调用一些方法，比如说通过RefreshIndicatorState来主动显示下拉刷新的UI效果
   ///由于GlobalKey的泛型T类型只能是继承State的类，所以不能使用GlobalKey<RefreshIndicator>而是GlobalKey<RefreshIndicatorState>
   final GlobalKey<RefreshIndicatorState> _refreshIndicatorKey = new GlobalKey<RefreshIndicatorState>();
+  ScrollController listController = new ScrollController();
 
   List<NewsList> dataList = new List();
   Color itemBackground = Colors.white;
   int itemCurrentClickIndex = -1;
+  int page = 1;
+  int limit = 10;
+  bool isLoadMore = false;
+  Dio dio;
   @override
   void initState() {
     // TODO: 这个函数在生命周期中只调用一次。
 
     super.initState();
+    _initDio();
+    listController.addListener((){
+      if(listController.position.pixels == listController.position.maxScrollExtent){
+        ///isLoadMore为true表明还在上拉加载获取更多的数据过程中，避免重复加载
+       if(!isLoadMore){
+         setState(() {
+           isLoadMore = true;
+           page+=1;
+           _getData();
+         });
+       }
+      }
+    });
     WidgetsBinding.instance.addPostFrameCallback((callback){
         //主动调用下拉刷新 onRefresh以便获取数据
         _refreshIndicatorKey.currentState.show(atTop: true);
     });
+  }
+  _initDio(){
+    dio = new Dio();
+    dio.interceptor.request.onSend = (Options options){
+      // 在请求被发送之前做一些事情
+      print('请求发送之前');
+      return options; //continue
+      // 如果你想完成请求并返回一些自定义数据，可以返回一个`Response`对象或返回`dio.resolve(data)`。
+      // 这样请求将会被终止，上层then会被调用，then中返回的数据将是你的自定义数据data.
+      //
+      // 如果你想终止请求并触发一个错误,你可以返回一个`DioError`对象，或返回`dio.reject(errMsg)`，
+      // 这样请求将被中止并触发异常，上层catchError会被调用。
+    };
+    dio.interceptor.response.onSuccess = (Response response) {
+      // 在返回响应数据之前做一些预处理
+      print('请求成功：');
+      return response; // continue
+    };
+    dio.interceptor.response.onError = (DioError e){
+      // 当请求失败时做一些预处理
+      print('请求失败：'+e.message);
+      return e;//continue
+    };
+    dio.options = new Options(connectTimeout:10000,receiveTimeout: 3000,);
   }
   @override
   void didChangeDependencies() {
@@ -68,46 +112,52 @@ class _NewsPageState extends State<NewsPage> with AutomaticKeepAliveClientMixin{
   }
 
   void _getData() async{
-      Dio dio = new Dio();
-      dio.interceptor.request.onSend = (Options options){
-        // 在请求被发送之前做一些事情
-        print('请求发送之前');
-        return options; //continue
-        // 如果你想完成请求并返回一些自定义数据，可以返回一个`Response`对象或返回`dio.resolve(data)`。
-        // 这样请求将会被终止，上层then会被调用，then中返回的数据将是你的自定义数据data.
-        //
-        // 如果你想终止请求并触发一个错误,你可以返回一个`DioError`对象，或返回`dio.reject(errMsg)`，
-        // 这样请求将被中止并触发异常，上层catchError会被调用。
-      };
-      dio.interceptor.response.onSuccess = (Response response) {
-        // 在返回响应数据之前做一些预处理
-        print('请求成功：');
-        return response; // continue
-      };
-      dio.interceptor.response.onError = (DioError e){
-        // 当请求失败时做一些预处理
-        print('请求失败：'+e.message);
-        return e;//continue
-      };
-      dio.options = new Options(connectTimeout:10000,receiveTimeout: 3000,);
-      Response response = await dio.get('https://cnodejs.org/api/v1/topics?tab=all',data: {'page':1,'limit':10});
-      if(response.statusCode == 200){
-          //转换成Json数据
-          NewsData newsData =  NewsData.fromJson(response.data);
+    await DioUtil().dioGet('${widget.url}&page=$page&limit=$limit',
+        (data){
+          NewsData newsData =  NewsData.fromJson(data);
           setState(() {
             //这样才能更新ListView的适配数据
             //下拉刷新需要清除所有数据获取最新的
-            dataList.clear();
-            //复制之前的数据，重新创建一个list集合
-            dataList = new List.from(dataList);
-            dataList.addAll(newsData.data);
+            if(isLoadMore){
+              dataList = new List.from(dataList);
+              dataList.removeAt(dataList.length-1);
+              dataList.addAll(newsData.data);
+              dataList.add(null);//添加一个空数据，用来当做footer
+              isLoadMore = false;
+            }else{
+              dataList.clear();
+              //复制之前的数据，重新创建一个list集合
+              dataList = new List.from(dataList);
+              dataList.addAll(newsData.data);
+              dataList.add(null);//添加一个空数据，用来当做footer
+            }
+            print(dataList.length);
           });
-          print(newsData.data.length);
-      }else{
-          print('请求发生错误');
-      }
-  }
+        },
+        (){
+          setState(() {
+            isLoadMore = false;
+          });
+          _showNoticeDialog('请求数据错误,请稍后重试');
+        });
 
+  }
+  ///显示自定义的dialog，全部重写,posPress在{}内，所以是可选参数
+  void _showNoticeDialog(String loadText,{dynamic posPress}){
+    showDialog(context: context,builder: (BuildContext context){
+      return CustomNoticeDialog(
+        noticeText: loadText,
+        noticeTitle: '提示',
+        isShowOneBtn: true,
+        clickOutCancel: true,
+        posBtnText: '确定',
+        negBtnText: '取消',
+        posPress: (){
+          posPress();
+        },
+      );
+    });
+  }
   //显示SnackBar
   void _showSnackBar(String content){
     Scaffold.of(context).showSnackBar(SnackBar(
@@ -156,7 +206,29 @@ class _NewsPageState extends State<NewsPage> with AutomaticKeepAliveClientMixin{
       );
   }
   Widget _getItemWidget(int index){
-      return GestureDetector(
+      if( dataList[index] == null){
+        return Container(
+          alignment: Alignment.center,
+          padding: EdgeInsets.all(5),
+          child:
+            Row(
+              crossAxisAlignment: CrossAxisAlignment.center,
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: <Widget>[
+                ///该组件能够强迫子组件有一个固定的高度，一般在子组件无法设置宽高的时候相结合
+                SizedBox(
+                  width: 20,
+                  height: 20,
+                  child:  CircularProgressIndicator(
+                    strokeWidth: 1,
+                  ),
+                ),
+                Text(' 加载更多...',style: TextStyle(color: Colors.white,fontSize: 14,),)
+              ],
+            ),
+        );
+      }else{
+        return GestureDetector(
           child: Container(
             color: itemCurrentClickIndex == index ?Colors.white70 : Colors.white,
             margin: EdgeInsets.fromLTRB(4,4,4,4),
@@ -165,7 +237,6 @@ class _NewsPageState extends State<NewsPage> with AutomaticKeepAliveClientMixin{
               child: Row(
                 children: <Widget>[
                   Container(
-                    color:  Color(AppColors.grey),
                     margin: EdgeInsets.only(right: 5),
                     child: Image.network(dataList[index].author.avatarUrl.startsWith("http") ? dataList[index].author.avatarUrl : 'http:${dataList[index].author.avatarUrl}',
                         width: 90,height: 90
@@ -175,28 +246,28 @@ class _NewsPageState extends State<NewsPage> with AutomaticKeepAliveClientMixin{
                     child:  Container(
                         height: 90,
                         child:Column(
-                            //前面两个属性与flex布局一样
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,//主轴方向
-                            crossAxisAlignment: CrossAxisAlignment.start,//交叉轴方向，与Row相反
-                            children: <Widget>[
-                                Text(dataList[index].title,maxLines:1,overflow: TextOverflow.ellipsis,
-                                    style: TextStyle(color: Colors.black87,fontSize: 15,fontWeight: FontWeight.bold),
-                                ),
-                                Row(
-                                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                    children: <Widget>[
-                                        Text(dataList[index].author.loginname,style: TextStyle(color: Color(0xff1296db),fontSize: 14),),
-                                        Text(dataList[index].reply_count.toString()+'/'+dataList[index].visit_count.toString(),style: TextStyle(color: Color(0xff1296db),fontSize: 14),),
-                                    ],
-                                ),
-                                Row(
-                                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                    children: <Widget>[
-                                        Text(DateTimeFormat.getFormatDate(dataList[index].create_at),style: TextStyle(fontSize: 11),),
-                                        Text(DateTimeFormat.getFormatDate(dataList[index].last_reply_at),style: TextStyle(fontSize: 11),),
-                                    ],
-                                ),
-                            ],
+                          //前面两个属性与flex布局一样
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,//主轴方向
+                          crossAxisAlignment: CrossAxisAlignment.start,//交叉轴方向，与Row相反
+                          children: <Widget>[
+                            Text(dataList[index].title,maxLines:1,overflow: TextOverflow.ellipsis,
+                              style: TextStyle(color: Colors.black87,fontSize: 15,fontWeight: FontWeight.bold),
+                            ),
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: <Widget>[
+                                Text(dataList[index].author.loginname,style: TextStyle(color: Color(0xff1296db),fontSize: 14),),
+                                Text(dataList[index].reply_count.toString()+'/'+dataList[index].visit_count.toString(),style: TextStyle(color: Color(0xff1296db),fontSize: 14),),
+                              ],
+                            ),
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: <Widget>[
+                                Text(DateTimeFormat.getFormatDate(dataList[index].create_at),style: TextStyle(fontSize: 11),),
+                                Text(DateTimeFormat.getFormatDate(dataList[index].last_reply_at),style: TextStyle(fontSize: 11),),
+                              ],
+                            ),
+                          ],
                         )
                     ),
                   ),
@@ -205,24 +276,26 @@ class _NewsPageState extends State<NewsPage> with AutomaticKeepAliveClientMixin{
 
             ),
           ),
-        onTap: (){
+          onTap: (){
             print('onTap');
             setState(() {
               itemCurrentClickIndex = -1;
             });
             _showDialog(dataList[index].title,newsId: dataList[index].id);
-       },
-        onTapDown: (details){
-          print('onTapDown');
+          },
+          onTapDown: (details){
+            print('onTapDown');
             //使用itemCurrentClickIndex
             setState(() {
-                itemCurrentClickIndex = index;
+              itemCurrentClickIndex = index;
             });
-        },
-        onTapUp: (details){
-          print('onTapUp');
-        },
-      );
+          },
+          onTapUp: (details){
+            print('onTapUp');
+          },
+        );
+      }
+
   }
   @override
   Widget build(BuildContext context) {
@@ -235,6 +308,7 @@ class _NewsPageState extends State<NewsPage> with AutomaticKeepAliveClientMixin{
        child: RefreshIndicator(
             key: _refreshIndicatorKey,//全局变量，可以在其他地方引用改组件实例
            child:  ListView.builder(
+               controller: listController,
                itemCount: dataList.length,
                padding: EdgeInsets.only(top: 0),
                itemBuilder: (BuildContext context, int index){
@@ -247,7 +321,8 @@ class _NewsPageState extends State<NewsPage> with AutomaticKeepAliveClientMixin{
 //                 .then((value)=> print('RefreshIndicator: '+widget.allUrl))
 //                 .timeout(Duration(seconds: 3));
            //延时0秒在获取数据
-            return Future.delayed(Duration(seconds: 0),()=> _getData());
+//             Future(()=>  _getData());
+             return Future.delayed(Duration(seconds: 0),()=> _getData());
        }),
     );
   }

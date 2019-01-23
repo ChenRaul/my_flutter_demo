@@ -63,7 +63,13 @@ class _MainPageState extends State<MainPage> with AutomaticKeepAliveClientMixin{
                 Expanded(
                   child:  Container(
                     child:TabBarView(
-                        children: [NewsPage(allUrl:'桂花几时落',index:0),NewsPage(allUrl:'槐花几时开',index:1),NewsPage(allUrl:'桂花几时落',index:2),NewsPage(allUrl:'槐花几时开',index:3),NewsPage(allUrl:'桂花几时落',index:4),]
+                        children: [
+                          NewsPage(url:'https://cnodejs.org/api/v1/topics?tab=all',index:0),
+                          NewsPage(url:'https://cnodejs.org/api/v1/topics?tab=good',index:1),
+                          NewsPage(url:'https://cnodejs.org/api/v1/topics?tab=share',index:2),
+                          NewsPage(url:'https://cnodejs.org/api/v1/topics?tab=ask',index:3),
+                          NewsPage(url:'https://cnodejs.org/api/v1/topics?tab=job',index:4),
+                        ]
                     ),
                      color: Colors.white,)
                 ),
