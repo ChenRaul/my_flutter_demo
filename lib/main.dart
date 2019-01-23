@@ -1,6 +1,7 @@
 
 import 'package:flutter/material.dart';
-import 'package:my_flutter_demo/MainPage.dart';
+import 'package:my_flutter_demo/LoginPage.dart';
+import 'package:my_flutter_demo/HomePage.dart';
 import 'package:my_flutter_demo/MePage.dart';
 import 'package:my_flutter_demo/MessagePage.dart';
 import 'package:my_flutter_demo/NewsDetail.dart';
@@ -21,7 +22,7 @@ class MyApp extends StatelessWidget {
         //这种方式是命名路由，不能动态传递参数，只能传递一些固定的参数，
         // 如需要传递动态参数，则需要使用构建路由，所以在NewsPage页面里面使用构建路由跳转到NewsDetail页面，因为需要传递每一条新闻的id
           '/newsDetail':(BuildContext context)=> NewsDetail(title:'详情'),
-
+          '/login':(BuildContext context)=> LoginPage(),
       },
       theme: ThemeData(
         //这种方式只能固定选择MaterialColor系统中定义的几种颜色来设置主题颜色，所以使用下面的方式来自定主题颜色
@@ -40,13 +41,13 @@ class Main extends StatefulWidget {
   final String title;
 
   @override
-  _MyHomePageState createState()  {
+  _MainState createState()  {
     print('title:'+title);
-    return _MyHomePageState();
+    return _MainState();
   }
 }
 
-class _MyHomePageState extends State<Main> {
+class _MainState extends State<Main> with AutomaticKeepAliveClientMixin{
   int _currentIndex = 0;
   final List<String> titles=['首页','发表','消息','我的'];
   List<StatefulWidget> _pages= List<StatefulWidget>();
@@ -67,12 +68,25 @@ class _MyHomePageState extends State<Main> {
     // TODO: implement initState
     super.initState();
     setState(() {
-      _pages.add(MainPage(mainPageTitle:'哈哈哈哈哈'));
+      _pages.add(HomePage(mainPageTitle:'哈哈哈哈哈'));
       _pages.add(PublishPage(publishPageTitle:'呵呵呵呵呵'));
       _pages.add(MessagePage(messagePageTitle:'桂花几时落'));
       _pages.add(MePage(mePageTitle:'槐花几时开'));
     });
-    print('MyHomePage initstate');
+    print('Main initstate');
+  }
+  @override
+  void deactivate() {
+    // TODO: implement deactivate
+    super.deactivate();
+    print('Main deactivate');
+  }
+
+  @override
+  void dispose() {
+    // TODO: implement dispose
+    super.dispose();
+    print('Main deactivate');
   }
   @override
   Widget build(BuildContext context) {
@@ -82,6 +96,7 @@ class _MyHomePageState extends State<Main> {
     // The Flutter framework has been optimized to make rerunning build methods
     // fast, so that you can just rebuild anything that needs updating rather
     // than having to individually change instances of widgets.
+    print('Main build');
     return Scaffold(
       appBar: _currentIndex == 0 ? null :AppBar(
           title: Text(titles[_currentIndex]),
@@ -90,7 +105,9 @@ class _MyHomePageState extends State<Main> {
       body: PageView.builder(
           controller:_pageController,
           onPageChanged: (index){
-
+            setState(() {
+              _currentIndex=index;
+            });
           },
           itemBuilder: (BuildContext context, int index){
               return _pages[index];
@@ -111,14 +128,28 @@ class _MyHomePageState extends State<Main> {
          //设置当前的索引,
          currentIndex: _currentIndex,
           onTap: (index){
-            setState(() {
-              _currentIndex=index;
-            });
-             _pageController.jumpToPage(index);
+            if(index == 3){
+              Navigator.push<bool>(context, MaterialPageRoute(builder: (BuildContext context){
+                return LoginPage();
+              })).then((ret){
+                if(ret){
+                  print('登录成功');
+                  _pageController.jumpToPage(index);
+                }else{
+                  print('登录失败');
+                }
+              });
+            }else{
+              _pageController.jumpToPage(index);
+            }
           },
        ),
 
     );
   }
+
+  @override
+  // TODO: implement wantKeepAlive
+  bool get wantKeepAlive => true;
 
 }

@@ -14,11 +14,24 @@ class _MePageState extends State<MePage> with AutomaticKeepAliveClientMixin{
   @override
   Widget build(BuildContext context) {
     // TODO: implement build
+    print('MePage build');
     return  Scaffold(
         body: new Center(child:new Text(widget.mePageTitle)),
     );
   }
+  @override
+  void deactivate() {
+    // TODO: implement deactivate
+    super.deactivate();
+    print('MePage deactivate');
+  }
 
+  @override
+  void dispose() {
+    // TODO: implement dispose
+    super.dispose();
+    print('MePage deactivate');
+  }
   @override
   // TODO: implement wantKeepAlive
   bool get wantKeepAlive => true;
