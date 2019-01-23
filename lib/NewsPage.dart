@@ -143,7 +143,7 @@ class _NewsPageState extends State<NewsPage> with AutomaticKeepAliveClientMixin{
 
   }
   ///显示自定义的dialog，全部重写,posPress在{}内，所以是可选参数
-  void _showNoticeDialog(String loadText,{dynamic posPress}){
+  void _showNoticeDialog(String loadText,{Function posPress}){
     showDialog(context: context,builder: (BuildContext context){
       return CustomNoticeDialog(
         noticeText: loadText,
