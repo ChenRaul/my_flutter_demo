@@ -3,6 +3,7 @@
 import 'package:flutter/material.dart';
 import 'package:my_flutter_demo/AppColors.dart';
 import 'package:my_flutter_demo/CommentPage.dart';
+import 'package:my_flutter_demo/CustomNoticeDialog.dart';
 import 'package:my_flutter_demo/DateTimeFormat.dart';
 import 'package:my_flutter_demo/DioUtil.dart';
 import 'package:my_flutter_demo/LoadDialog.dart';
@@ -43,10 +44,27 @@ class _NewsDetailState extends State<NewsDetail>{
              print('请求error');
               ///此处是关闭dialog
               Navigator.pop(context);
+              _showNoticeDialog("请求数据发生错误");
+
        });
     });
   }
-
+  ///显示自定义的dialog，全部重写,posPress在{}内，所以是可选参数
+  void _showNoticeDialog(String loadText,{Function posPress}) {
+    showDialog(context: context, builder: (BuildContext context) {
+      return CustomNoticeDialog(
+        noticeText: loadText,
+        noticeTitle: '提示',
+        isShowOneBtn: true,
+        clickOutCancel: true,
+        posBtnText: '确定',
+        negBtnText: '取消',
+        posPress: () {
+          posPress();
+        },
+      );
+    });
+  }
   _showLoadDialog(){
       print('显示对话框');
       showDialog(context: context,builder: (BuildContext context){
