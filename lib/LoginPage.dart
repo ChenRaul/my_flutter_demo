@@ -16,9 +16,11 @@ class LoginPage extends StatefulWidget{
 }
 
 class _LoginPageState extends State<LoginPage>{
+
   bool isLoginSuccess = false;
   String password='';
   CupertinoButton login;
+  FocusNode mFocusNode = FocusNode();
   @override
   void initState() {
     // TODO: implement initState
@@ -30,10 +32,22 @@ class _LoginPageState extends State<LoginPage>{
       return LoadDialog(loadText: '登录中...',);
     });
   }
-
-  void _showNoticeDialog(){
+///显示自定义的dialog，全部重写
+  void _showNoticeDialog(String loadText,dynamic posPress){
     showDialog(context: context,builder: (BuildContext context){
-      return CustomNoticeDialog();
+      return CustomNoticeDialog(
+        noticeText: loadText,
+        noticeTitle: '提示',
+        isShowOneBtn: true,
+        clickOutCancel: true,
+        posBtnText: '确定',
+        negBtnText: '取消',
+        posPress: (){
+          if(isLoginSuccess){
+            posPress();
+          }
+        },
+      );
     });
   }
   //登录
@@ -44,8 +58,12 @@ class _LoginPageState extends State<LoginPage>{
   }
   void _loginOver(){
     Navigator.of(context).pop();
-    print('登录结束');
-    _showNoticeDialog();
+    _showNoticeDialog(isLoginSuccess ?'登录成功':'登录失败,请稍后重试',
+      //登录成功需要调用
+      (){
+        Navigator.pop(context,isLoginSuccess);
+      }
+    );
   }
   @override
   Widget build(BuildContext context) {
@@ -53,61 +71,70 @@ class _LoginPageState extends State<LoginPage>{
     return WillPopScope(
         child: Scaffold(
           appBar: MyAppBar(title:'登录',retObject: isLoginSuccess,),
-          body: Container(
-            child: Column(
-              children: <Widget>[
-                Padding(
-                  padding: EdgeInsets.fromLTRB(40, 60, 40, 20),
-                  child: TextField(
-                    textAlign: TextAlign.start,
-                    keyboardType: TextInputType.number,
-                    cursorWidth: 1,
-                    style: TextStyle(
-                      fontSize: 16,
-                      color: Colors.black87
+          body: GestureDetector(
+            child: Container(
+              color: Colors.white,
+              child: Column(
+                children: <Widget>[
+                  Padding(
+                    padding: EdgeInsets.fromLTRB(40, 60, 40, 20),
+                    child: TextField(
+                      focusNode: mFocusNode ,
+                        textAlign: TextAlign.start,
+                        keyboardType: TextInputType.number,
+                        cursorWidth: 1,
+                        style: TextStyle(
+                            fontSize: 16,
+                            color: Colors.black87
 
-                    ),
-                    decoration: InputDecoration(
-                      contentPadding: EdgeInsets.all(10) ,
-                      hintText: '请输入密码',
-                      hintStyle: TextStyle(color: Colors.grey,fontSize: 16),
-                      icon: Icon(Icons.https,size: 30,),
-                      border:OutlineInputBorder(
-                        borderRadius: BorderRadius.all(Radius.circular(5)),
-                        borderSide: BorderSide(
-                          color: Color(AppColors.grey),
                         ),
-                        gapPadding: 0,
-                      ),
+                        decoration: InputDecoration(
+                          contentPadding: EdgeInsets.all(10) ,
+                          hintText: '请输入密码',
+                          hintStyle: TextStyle(color: Colors.grey,fontSize: 16),
+                          prefixIcon: Icon(Icons.https,size: 30,),
+                          border:OutlineInputBorder(
+                            borderRadius: BorderRadius.all(Radius.circular(5)),
+                            borderSide: BorderSide(
+                              color: Color(AppColors.grey),
+                            ),
+                            gapPadding: 0,
+                          ),
+                        ),
+                        onChanged:(String text){
+                          setState(() {
+                            password = text;
+                          });
+                        }
                     ),
-                    onChanged:(String text){
-                        setState(() {
-                          password = text;
-                        });
-                    }
                   ),
-                ),
-                Container(
-                  width: MediaQuery.of(context).size.width,
-                  padding: EdgeInsets.all(40),
-                  child: login = CupertinoButton(
-                      disabledColor: Colors.grey,
-                      color: Color(AppColors.appThemeColor),
-                      pressedOpacity: 0.9,
-                      borderRadius: BorderRadius.all(Radius.circular(5)),
-                      child:Text('登录',style: TextStyle(color: Colors.white,fontSize: 18,),),
-                    ///  onPressed为null，按钮就会自动不能点击
-                    onPressed: password.length > 0 ?(){
-                        _onLogin();
-                      }:null,
+                  Container(
+                      width: MediaQuery.of(context).size.width,
+                      padding: EdgeInsets.all(40),
+                      child: login = CupertinoButton(
+                        disabledColor: Colors.grey,
+                        color: Color(AppColors.appThemeColor),
+                        pressedOpacity: 0.9,
+                        borderRadius: BorderRadius.all(Radius.circular(5)),
+                        child:Text('登录',style: TextStyle(color: Colors.white,fontSize: 18,),),
+                        ///  onPressed为null，按钮就会自动不能点击
+                        onPressed: password.length > 0 ?(){
+                          _onLogin();
+                        }:null,
+                      )
                   )
-                )
 
-              ],
+                ],
+              ),
             ),
-          ),
+            onTap: (){
+              ///关闭输入框
+              mFocusNode.unfocus();
+            },
+          )
         ),
         onWillPop: (){
+          print('点击返回按钮');
           Navigator.pop(context,isLoginSuccess);
         }
     );

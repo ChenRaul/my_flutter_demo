@@ -1,6 +1,7 @@
 
 
 import 'package:flutter/material.dart';
+import 'package:my_flutter_demo/AppColors.dart';
 import 'package:my_flutter_demo/CommentPage.dart';
 import 'package:my_flutter_demo/DateTimeFormat.dart';
 import 'package:my_flutter_demo/DioUtil.dart';
@@ -81,7 +82,7 @@ class _NewsDetailState extends State<NewsDetail>{
                   children: <Widget>[
                     CircleAvatar(
                       radius:50,
-                      foregroundColor: Colors.white70,
+                      backgroundColor: Color(AppColors.grey),
                       backgroundImage: NetworkImage(newDetailData.data.author.avatarUrl),
                     ),
                     Expanded(

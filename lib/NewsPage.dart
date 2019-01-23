@@ -1,6 +1,7 @@
 
 import 'package:flutter/material.dart';
 import 'package:dio/dio.dart';
+import 'package:my_flutter_demo/AppColors.dart';
 import 'package:my_flutter_demo/DateTimeFormat.dart';
 import 'dart:core';
 
@@ -164,6 +165,7 @@ class _NewsPageState extends State<NewsPage> with AutomaticKeepAliveClientMixin{
               child: Row(
                 children: <Widget>[
                   Container(
+                    color:  Color(AppColors.grey),
                     margin: EdgeInsets.only(right: 5),
                     child: Image.network(dataList[index].author.avatarUrl.startsWith("http") ? dataList[index].author.avatarUrl : 'http:${dataList[index].author.avatarUrl}',
                         width: 90,height: 90
