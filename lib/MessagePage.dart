@@ -12,6 +12,35 @@ class MessagePage extends StatefulWidget{
 }
 class _MessagePageState extends State<MessagePage> with AutomaticKeepAliveClientMixin{
 
+  String text='' ;
+  int count=0;
+  Future future ;
+  bool stopFuture=false;
+ @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    print('MessagePage init');
+    setStateText();
+  }
+  void setText(){
+    future = Future.delayed(Duration(seconds: 1,),()=> _delayFun());
+  }
+  void _delayFun(){
+    if(stopFuture){
+
+    }else{
+      count++;
+      setStateText();
+    }
+  }
+  void setStateText(){
+   print('${widget.messagePageTitle}$count');
+    setState(() {
+      text = '${widget.messagePageTitle}$count';
+      setText();
+    });
+  }
 
   @override
   void deactivate() {
@@ -24,6 +53,7 @@ class _MessagePageState extends State<MessagePage> with AutomaticKeepAliveClient
   void dispose() {
     // TODO: implement dispose
     super.dispose();
+    stopFuture = true;
     print('MessagePage deactivate');
   }
   @override
@@ -31,7 +61,7 @@ class _MessagePageState extends State<MessagePage> with AutomaticKeepAliveClient
     // TODO: implement build
     print('MessagePage build');
     return Scaffold(
-        body: new Center(child:new Text(widget.messagePageTitle)),
+        body: new Center(child:new Text(text)),
       );
   }
 

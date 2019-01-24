@@ -50,44 +50,43 @@ class _HomePageState extends State<HomePage> with AutomaticKeepAliveClientMixin{
   @override
   Widget build(BuildContext context) {
     print('MainPage build');
-    return new MaterialApp(
-      theme: new ThemeData(
-        primaryColor:const Color(0xff1296db),
-      ),
+    return new Scaffold(
       //使用TabBar，TabBarView
-      home: new DefaultTabController(length: tabTitleList.length, child: new Scaffold(
-        backgroundColor:Color(0xff1296db),
-        body: new Column(
-            children: <Widget>[
-               SafeArea(
-                   top: true,
-                   bottom: false,
-                 //标题栏，使用SafeArea,top为true避免标题栏被状态栏给遮住
-                   child:  Container(
-                       child: TabBar(tabs:_getTabList(),
-                           isScrollable:false,
-                           indicatorColor:Colors.white,
-                           indicatorSize: TabBarIndicatorSize.tab,
-                           indicatorWeight:4.0,
-                           labelStyle:TextStyle(color: Colors.white,fontSize: 16),
-                           unselectedLabelStyle: TextStyle(color: Colors.grey,fontSize: 16),
-                      ),
+      body: new DefaultTabController(length: tabTitleList.length,
+        child: new Container(
+          color:Color(0xff1296db),
+          child: new Column(
+              children: <Widget>[
+                 SafeArea(
+                     top: true,
+                     bottom: false,
+                   //标题栏，使用SafeArea,top为true避免标题栏被状态栏给遮住
+                     child:  Container(
+                         child: TabBar(tabs:_getTabList(),
+                             isScrollable:false,
+                             indicatorColor:Colors.white,
+                             indicatorSize: TabBarIndicatorSize.tab,
+                             indicatorWeight:4.0,
+                             labelStyle:TextStyle(color: Colors.white,fontSize: 16),
+                             unselectedLabelStyle: TextStyle(color: Colors.grey,fontSize: 16),
+                        ),
 
-                       height: 50,
-                       color: Color(0xff1296db),
-                   ),
-                ),
-                Expanded(
-                  child:  Container(
-                    child:TabBarView(
-                        children: [all,good,share,ask,job]
-                    ),
-                     color: Colors.white,)
-                ),
-            ],
+                         height: 50,
+                         color: Color(0xff1296db),
+                     ),
+                  ),
+                  Expanded(
+                    child:  Container(
+                      child:TabBarView(
+                          children: [all,good,share,ask,job]
+                      ),
+                       color: Colors.white,)
+                  ),
+              ],
+          ),
         ),
       ),
-      ),);
+    );
   }
 
   @override
