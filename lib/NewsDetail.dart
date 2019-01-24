@@ -72,12 +72,22 @@ class _NewsDetailState extends State<NewsDetail>{
       });
   }
   @override
+  void deactivate() {
+    // TODO: implement deactivate
+    super.deactivate();
+    print('NewsDetail deactivate');
+  }
+
+  @override
   void dispose() {
-    // TODO: 组件就要被销毁了，这个函数一般会移除监听，清理环境。
+    // TODO: implement dispose
     super.dispose();
+    print('NewsDetail deactivate');
   }
   @override
   Widget build(BuildContext context) {
+    // TODO: implement build
+    print('NewsDetail build');
     // TODO: implement build
 
     return WillPopScope(

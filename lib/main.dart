@@ -69,7 +69,7 @@ class _MainState extends State<Main> with AutomaticKeepAliveClientMixin{
     super.initState();
     setState(() {
       _pages.add(HomePage(mainPageTitle:'哈哈哈哈哈'));
-      _pages.add(PublishPage(publishPageTitle:'呵呵呵呵呵'));
+      _pages.add(PublishPage(publishPageTitle:'槐花几时开'));
       _pages.add(MessagePage(messagePageTitle:'桂花几时落'));
       _pages.add(MePage(mePageTitle:'槐花几时开'));
     });
