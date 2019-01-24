@@ -278,9 +278,7 @@ class _NewsPageState extends State<NewsPage> with AutomaticKeepAliveClientMixin{
           ),
           onTap: (){
             print('onTap');
-            setState(() {
-              itemCurrentClickIndex = -1;
-            });
+
             _showDialog(dataList[index].title,newsId: dataList[index].id);
           },
           onTapDown: (details){
@@ -290,8 +288,17 @@ class _NewsPageState extends State<NewsPage> with AutomaticKeepAliveClientMixin{
               itemCurrentClickIndex = index;
             });
           },
+          onTapCancel: (){
+            print('onTapCancel');
+            setState(() {
+              itemCurrentClickIndex = -1;
+            });
+          },
           onTapUp: (details){
             print('onTapUp');
+            setState(() {
+              itemCurrentClickIndex = -1;
+            });
           },
         );
       }
