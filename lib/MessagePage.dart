@@ -31,6 +31,9 @@ class _MessagePageState extends State<MessagePage> with AutomaticKeepAliveClient
 
     }else{
       count++;
+      if(count >10){
+        count = 1;
+      }
       setStateText();
     }
   }
