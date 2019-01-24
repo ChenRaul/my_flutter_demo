@@ -8,7 +8,7 @@ import 'package:my_flutter_demo/MessagePage.dart';
 import 'package:my_flutter_demo/NewsDetail.dart';
 import 'package:my_flutter_demo/PublishPage.dart';
 import 'package:my_flutter_demo/SplashPage.dart';
-
+///程序入口
 void main() => runApp(MyApp());
 
 class MyApp extends StatelessWidget {
