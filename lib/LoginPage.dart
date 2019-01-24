@@ -79,7 +79,8 @@ class _LoginPageState extends State<LoginPage>{
                   Padding(
                     padding: EdgeInsets.fromLTRB(40, 60, 40, 20),
                     child: TextField(
-                      focusNode: mFocusNode ,
+                        obscureText: true,///密码隐藏为*
+                        focusNode: mFocusNode ,
                         textAlign: TextAlign.start,
                         keyboardType: TextInputType.number,
                         cursorWidth: 1,
