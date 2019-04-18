@@ -14,6 +14,7 @@ class _PublishPageState extends State<PublishPage> with AutomaticKeepAliveClient
   @override
   Widget build(BuildContext context) {
     // TODO: implement build
+    super.build(context);
     return  Scaffold(
         body: new Center(child:new Text(widget.publishPageTitle)),
     );

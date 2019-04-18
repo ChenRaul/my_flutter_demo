@@ -37,6 +37,9 @@ class _MainState extends State<MainPage> with AutomaticKeepAliveClientMixin{
   void initState() {
     // TODO: implement initState
     super.initState();
+    //TODO 切记
+    ///方在BottomNavigationBar+PageView的框架中时，需要再其所有的子组件(需要保存状态)中的Widget build(BuildContext context){}方法里面添加super.build(context);
+    ///这样可以解决左右切换界面没有问题，跳转新界面后，当第一页跳转新的界面再返回，再切第二、三页发现重置了，再切回第一页发现页被重置了的问题
     setState(() {
       _pages.add(HomePage(mainPageTitle:'哈哈哈哈哈'));
       _pages.add(PublishPage(publishPageTitle:'槐花几时开'));
@@ -67,6 +70,8 @@ class _MainState extends State<MainPage> with AutomaticKeepAliveClientMixin{
     // fast, so that you can just rebuild anything that needs updating rather
     // than having to individually change instances of widgets.
     print('Main build');
+    ///方在BottomNavigationBar+PageView的框架中时，需要再其所有的子组件(需要保存状态)中的Widget build(BuildContext context){}方法里面添加super.build(context);
+    ///这样可以解决左右切换界面没有问题，跳转新界面后，当第一页跳转新的界面再返回，再切第二、三页发现重置了，再切回第一页发现页被重置了的问题
     return Scaffold(
       appBar: _currentIndex == 0 ? null :AppBar(
         title: Text(titles[_currentIndex]),
@@ -99,6 +104,7 @@ class _MainState extends State<MainPage> with AutomaticKeepAliveClientMixin{
         currentIndex: _currentIndex,
         onTap: (index){
           if(index == 3){
+            ///点击消息时需要作登陆判断
             Navigator.push<bool>(context, MaterialPageRoute(builder: (BuildContext context){
               return LoginPage();
             })).then((ret){

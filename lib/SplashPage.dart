@@ -19,13 +19,14 @@ class _SplashPageState extends State<SplashPage>{
     print('SplashPage initState');
     Future.delayed(Duration(seconds: 3),()=> _jump());
   }
-  _jump(){
+  void _jump(){
     print('SplashPage 跳转');
     Navigator.of(context).pushReplacementNamed('/main');
   }
   @override
   Widget build(BuildContext context) {
     // TODO: implement build
+
     print('SplashPage build');
     return Image.asset('img/launch.png',
             fit: BoxFit.fill,

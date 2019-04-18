@@ -50,6 +50,9 @@ class _HomePageState extends State<HomePage> with AutomaticKeepAliveClientMixin{
   @override
   Widget build(BuildContext context) {
     print('MainPage build');
+    ///调用super.build(context);方法可以解决在BottomNavigationBar+PageView的框架中时，
+    ///左右切换界面没有问题，跳转新界面后，当第一页跳转新的界面再返回，再切第二、三页发现重置了，再切回第一页发现页被重置了的问题
+    super.build(context);
     return new Scaffold(
       //使用TabBar，TabBarView
       body: new DefaultTabController(length: tabTitleList.length,

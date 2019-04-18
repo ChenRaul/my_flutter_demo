@@ -63,6 +63,7 @@ class _MessagePageState extends State<MessagePage> with AutomaticKeepAliveClient
   Widget build(BuildContext context) {
     // TODO: implement build
     print('MessagePage build');
+    super.build(context);
     return Scaffold(
         body: new Center(child:new Text(text)),
       );

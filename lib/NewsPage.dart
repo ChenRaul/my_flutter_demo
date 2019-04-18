@@ -307,6 +307,7 @@ class _NewsPageState extends State<NewsPage> with AutomaticKeepAliveClientMixin{
   @override
   Widget build(BuildContext context) {
     // TODO: implement build
+    super.build(context);
     return Container(
        color: Colors.black12,
        padding: EdgeInsets.all(0),

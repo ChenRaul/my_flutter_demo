@@ -33,7 +33,7 @@ class _MyAppState extends State<MyApp> with AutomaticKeepAliveClientMixin{
         '/login':(BuildContext context)=> LoginPage(),
       },
       theme: ThemeData(
-        //这种方式只能固定选择MaterialColor系统中定义的几种颜色来设置主题颜色，所以使用下面的方式来自定主题颜色
+        //这种方式只能固定选择MaterialColor系统中定义的几种颜色来设置主题颜色，
         primarySwatch: Colors.blue,
         primaryColor:const Color(0xff1296db),
         accentColor:const Color(0xff2296db),

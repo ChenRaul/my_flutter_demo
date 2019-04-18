@@ -15,6 +15,7 @@ class _MePageState extends State<MePage> with AutomaticKeepAliveClientMixin{
   Widget build(BuildContext context) {
     // TODO: implement build
     print('MePage build');
+    super.build(context);
     return  Scaffold(
         body: new Center(child:new Text(widget.mePageTitle)),
     );
