@@ -1,7 +1,7 @@
 import 'package:dio/dio.dart';
 
 class DioUtil{
-  dioGet(String url,dynamic onSuccess,dynamic onError) async{
+  void dioGet(String url,dynamic onSuccess,dynamic onError) async{
     Dio dio = Dio();
     dio.interceptor.response.onSuccess = (Response response) {
       // 在返回响应数据之前做一些预处理

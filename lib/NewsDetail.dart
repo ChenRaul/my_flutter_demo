@@ -9,6 +9,7 @@ import 'package:my_flutter_demo/DioUtil.dart';
 import 'package:my_flutter_demo/LoadDialog.dart';
 import 'package:my_flutter_demo/NewsDetailResponse.dart';
 import 'package:flutter_inappbrowser/flutter_inappbrowser.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 class NewsDetail extends StatefulWidget{
   NewsDetail({Key key, this.title,this.newsId}) : super(key: key);
@@ -89,7 +90,6 @@ class _NewsDetailState extends State<NewsDetail>{
     // TODO: implement build
     print('NewsDetail build');
     // TODO: implement build
-
     return WillPopScope(
         child: Scaffold(
           appBar: AppBar(
@@ -102,21 +102,20 @@ class _NewsDetailState extends State<NewsDetail>{
           ),
           body: newDetailData == null ? Text(''):
           Column(
-            
             children: <Widget>[
               Padding(
                 padding: EdgeInsets.all(5),
                 child: Row(
                   children: <Widget>[
                     CircleAvatar(
-                      radius:50,
+                      radius:ScreenUtil.getInstance().setHeight(120),
                       backgroundColor: Color(AppColors.grey),
                       backgroundImage: NetworkImage(newDetailData.data.author.avatarUrl),
                     ),
                     Expanded(
                         child:Container(
-                          height: 100,
-                          padding: EdgeInsets.all(10),
+                          height:ScreenUtil.getInstance().setHeight(260),
+                          padding: EdgeInsets.all(ScreenUtil.getInstance().setWidth(10)),
                           child: Column(
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             crossAxisAlignment: CrossAxisAlignment.start,

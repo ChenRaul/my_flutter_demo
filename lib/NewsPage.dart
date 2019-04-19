@@ -1,6 +1,7 @@
 
 import 'package:flutter/material.dart';
 import 'package:dio/dio.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:my_flutter_demo/AppColors.dart';
 import 'package:my_flutter_demo/CustomNoticeDialog.dart';
 import 'package:my_flutter_demo/DateTimeFormat.dart';
@@ -239,12 +240,12 @@ class _NewsPageState extends State<NewsPage> with AutomaticKeepAliveClientMixin{
                   Container(
                     margin: EdgeInsets.only(right: 5),
                     child: Image.network(dataList[index].author.avatarUrl.startsWith("http") ? dataList[index].author.avatarUrl : 'http:${dataList[index].author.avatarUrl}',
-                        width: 90,height: 90
+                        width: ScreenUtil().setWidth(240),height: ScreenUtil().setWidth(240)
                     ),
                   ),
                   Expanded(
                     child:  Container(
-                        height: 90,
+                        height: ScreenUtil().setWidth(240),
                         child:Column(
                           //前面两个属性与flex布局一样
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,//主轴方向
@@ -308,6 +309,8 @@ class _NewsPageState extends State<NewsPage> with AutomaticKeepAliveClientMixin{
   Widget build(BuildContext context) {
     // TODO: implement build
     super.build(context);
+
+
     return Container(
        color: Colors.black12,
        padding: EdgeInsets.all(0),

@@ -26,6 +26,8 @@ dependencies:
   flutter_inappbrowser: ^0.5.51
   #text html富文本显示
   flutter_html_textview: ^0.2.6
+  #添加适配屏幕的库
+  flutter_screenutil: ^0.5.2
 
 dev_dependencies:
   flutter_test:

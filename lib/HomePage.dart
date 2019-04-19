@@ -27,6 +27,7 @@ class _HomePageState extends State<HomePage> with AutomaticKeepAliveClientMixin{
     super.initState();
     print('HomePage initState');
 
+
   }
   List<Widget> _getTabList(){
     List<Widget> textList= List<Widget>();
