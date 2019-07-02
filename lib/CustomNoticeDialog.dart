@@ -62,16 +62,16 @@ class CustomNoticeDialog extends Dialog{
               padding: EdgeInsets.fromLTRB(0, 15, 0, 15),
               width: MediaQuery.of(context).size.width*0.8*0.5,
               decoration: BoxDecoration(
-                  border: Border(
-                    top: BorderSide(
-                      color: Color(AppColors.grey),
-                      width: 1,
-                    ),
-                    right:BorderSide(
-                      color: Color(AppColors.grey),
-                      width: 0.5,
-                    ),
-                  )
+                border: Border(
+                  top: BorderSide(
+                    color: Color(AppColors.grey),
+                    width: 1,
+                  ),
+                  right:BorderSide(
+                    color: Color(AppColors.grey),
+                    width: 0.5,
+                  ),
+                )
               ),
               child: _getText(negBtnText),
             ),
@@ -86,21 +86,20 @@ class CustomNoticeDialog extends Dialog{
               padding: EdgeInsets.fromLTRB(0, 15, 0, 15),
               width: MediaQuery.of(context).size.width*0.8*0.5,
               decoration: BoxDecoration(
-                  border: Border(
-                    top: BorderSide(
-                      color: Color(AppColors.grey),
-                      width: 1,
-                    ),
-                    left:BorderSide(
-                      color: Color(AppColors.grey),
-                      width: 0.5,
-                    ),
-                  )
+                border: Border(
+                  top: BorderSide(
+                    color: Color(AppColors.grey),
+                    width: 1,
+                  ),
+                  left:BorderSide(
+                    color: Color(AppColors.grey),
+                    width: 0.5,
+                  ),
+                )
               ),
               child: _getText(posBtnText),
             ),
             onTap: (){
-
               Navigator.pop(context);
               posPress();
             },
@@ -142,14 +141,14 @@ class CustomNoticeDialog extends Dialog{
                 ),
                 //提示内容，正文内容
                 Expanded(
-                    child:Container(
-                      alignment: Alignment.center,
-                      child: Text(noticeText,style: TextStyle(
-                        color: Colors.black87,
-                        fontSize: 18,
-                        decoration: TextDecoration.none,
-                      ),),
-                    )
+                  child:Container(
+                    alignment: Alignment.center,
+                    child: Text(noticeText,style: TextStyle(
+                      color: Colors.black87,
+                      fontSize: 18,
+                      decoration: TextDecoration.none,
+                    ),),
+                  )
                 ),
                 _getBtn(context),
               ],

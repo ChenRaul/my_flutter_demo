@@ -33,21 +33,20 @@ class _NewsDetailState extends State<NewsDetail>{
     WidgetsBinding.instance.addPostFrameCallback((callback){
        _showLoadDialog();
        new DioUtil().dioGet("https://cnodejs.org/api/v1/topic/${widget.newsId}",
-           (responseData){
-               setState(() {
-                 newDetailData = NewsDetailResponse.fromJson(responseData);
-                 ///此处是关闭dialog
-                 Navigator.pop(context);
-                 print(newDetailData);
-               });
-
-            }, (){
-             print('请求error');
-              ///此处是关闭dialog
-              Navigator.pop(context);
-              _showNoticeDialog("请求数据发生错误");
-
-       });
+         (responseData){
+           setState(() {
+             newDetailData = NewsDetailResponse.fromJson(responseData);
+             ///此处是关闭dialog
+             Navigator.pop(context);
+             print(newDetailData);
+           });
+         },(){
+           print('请求error');
+           ///此处是关闭dialog
+           Navigator.pop(context);
+           _showNoticeDialog("请求数据发生错误");
+         }
+       );
     });
   }
   ///显示自定义的dialog，全部重写,posPress在{}内，所以是可选参数
@@ -67,10 +66,10 @@ class _NewsDetailState extends State<NewsDetail>{
     });
   }
   _showLoadDialog(){
-      print('显示对话框');
-      showDialog(context: context,builder: (BuildContext context){
-          return LoadDialog(loadText: '加载中...',);
-      });
+    print('显示对话框');
+    showDialog(context: context,builder: (BuildContext context){
+      return LoadDialog(loadText: '加载中...',);
+    });
   }
   @override
   void deactivate() {
@@ -113,25 +112,25 @@ class _NewsDetailState extends State<NewsDetail>{
                       backgroundImage: NetworkImage(newDetailData.data.author.avatarUrl),
                     ),
                     Expanded(
-                        child:Container(
-                          height:ScreenUtil.getInstance().setHeight(260),
-                          padding: EdgeInsets.all(ScreenUtil.getInstance().setWidth(10)),
-                          child: Column(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: <Widget>[
-                              Row(
-                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                children: <Widget>[
-                                  Text('${newDetailData.data.author.loginName}',style: TextStyle(color: Colors.blue,fontSize: 16),),
-                                  Text('#楼主',style: TextStyle(color: Colors.black87,fontSize: 14),),
-                                ],
-                              ),
-                              Text('阅读：${newDetailData.data.visitCount}      回复: ${newDetailData.data.replyCount}',style: TextStyle(color: Colors.grey,fontSize: 14),),
-                              Text('创建时间：${DateTimeFormat.getFormatDate(newDetailData.data.createAt)}',style: TextStyle(color: Colors.grey,fontSize: 14),),
-                            ],
-                          ),
-                        )
+                      child:Container(
+                        height:ScreenUtil.getInstance().setHeight(260),
+                        padding: EdgeInsets.all(ScreenUtil.getInstance().setWidth(10)),
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: <Widget>[
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: <Widget>[
+                                Text('${newDetailData.data.author.loginName}',style: TextStyle(color: Colors.blue,fontSize: 16),),
+                                Text('#楼主',style: TextStyle(color: Colors.black87,fontSize: 14),),
+                              ],
+                            ),
+                            Text('阅读：${newDetailData.data.visitCount}      回复: ${newDetailData.data.replyCount}',style: TextStyle(color: Colors.grey,fontSize: 14),),
+                            Text('创建时间：${DateTimeFormat.getFormatDate(newDetailData.data.createAt)}',style: TextStyle(color: Colors.grey,fontSize: 14),),
+                          ],
+                        ),
+                      )
                     ),
                   ],
                 ),
