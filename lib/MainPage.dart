@@ -39,7 +39,7 @@ class _MainState extends State<MainPage> with AutomaticKeepAliveClientMixin{
     // TODO: implement initState
     super.initState();
     //TODO 切记
-    ///方在BottomNavigationBar+PageView的框架中时，需要再其所有的子组件(需要保存状态)中的Widget build(BuildContext context){}方法里面添加super.build(context);
+    ///放在BottomNavigationBar+PageView的框架中时，需要再其所有的子组件(需要保存状态)中的Widget build(BuildContext context){}方法里面添加super.build(context);
     ///这样可以解决左右切换界面没有问题，跳转新界面后，当第一页跳转新的界面再返回，再切第二、三页发现重置了，再切回第一页发现页被重置了的问题
     setState(() {
       _pages.add(HomePage(mainPageTitle:'哈哈哈哈哈'));
@@ -75,7 +75,7 @@ class _MainState extends State<MainPage> with AutomaticKeepAliveClientMixin{
     // ScreenUtil.instance =  ScreenUtil(width: 1080, height: 2248)..init(context); 等同于下面两句
     ScreenUtil.instance =  ScreenUtil(width: 1080, height: 2248);
     ScreenUtil.instance.init(context);
-    ///方在BottomNavigationBar+PageView的框架中时，需要再其所有的子组件(需要保存状态)中的Widget build(BuildContext context){}方法里面添加super.build(context);
+    ///放在BottomNavigationBar+PageView的框架中时，需要再其所有的子组件(需要保存状态)中的Widget build(BuildContext context){}方法里面添加super.build(context);
     ///这样可以解决左右切换界面没有问题，跳转新界面后，当第一页跳转新的界面再返回，再切第二、三页发现重置了，再切回第一页发现页被重置了的问题
     return Scaffold(
       appBar: _currentIndex == 0 ? null :AppBar(
